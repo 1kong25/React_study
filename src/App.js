@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import TOC from "./components/TOC";
-import Content from "./components/Content";
+import ReadContent from "./components/ReadContent";
+import CreateContent from "./components/CreateContent";
 import Subject from "./components/Subject";
+import Control from "./components/Control";
+
 import './App.css';
 
 class App extends Component{
   constructor(props){
     super(props);
     this.state={
-      mode: "welcome",
+      mode: "create",
       selected_content_id:2,
       subject:{title:"WEB", sub:"world wide web!"},
       welcome:{title:"welcome", desc:"Hello, React!"},
@@ -20,10 +23,12 @@ class App extends Component{
     }
   }
   render( ){
-    var _title, _desc = null;
+    var _title, _desc, _article = null;
     if(this.state.mode === "welcome"){
       _title = this.state.welcome.title;
       _desc = this. state.welcome.desc;
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+
     } else if(this.state.mode === "read"){
       var i = 0;
       while(i < this.state.contents.length){
@@ -35,7 +40,11 @@ class App extends Component{
         }
         i = i+1;
       }
-    } 
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+
+    } else if(this.state.mode === "create"){
+      _article= <CreateContent></CreateContent>
+    }
     return(
       <div className="App">
         <Subject 
@@ -46,19 +55,7 @@ class App extends Component{
           }.bind(this)}
           >
           </Subject>
-        {/* <header>
-              <h1><a href="/" onClick={function(e){
-                console.log(e); 
-                e.preventDefault(); //a태그의 기본적인 동작방법 금지 (페이지 전환 막기)
-                // debugger; //실행멈춤
-                //this.state.mode="welcome"; 
-                this.setState({ //state 바꿀때는 setState로
-                  mode:"welcome"
-                }); 
-                //this를 찾을 수 없을 때는 함수 직후.bind(this)
-              }.bind(this)}>{this.state.subject.title}</a></h1> 
-              {this.state.subject.sub}
-        </header> */}
+
         <TOC 
           onChangePage={function(id){
             this.setState({
@@ -68,9 +65,12 @@ class App extends Component{
           }.bind(this)}
           data={this.state.contents}
         ></TOC>
-
-        <Content title={_title} desc={_desc}></Content>
-
+        <Control onChangeMode={function(_mode){
+          this.setState({
+            mode:_mode
+          });
+        }.bind(this)}></Control>
+        {_article}
      </div>
     );
   }
