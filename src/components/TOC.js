@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 
 class TOC extends Component{
+    shouldComponentUpdate(newProps, newState){
+      console.log("TOC render shouldComponentUpdate"
+      ,newProps.data
+      ,this.props.data
+      );
+      if(this.props.data === newProps.data){
+        return false;
+      }
+      return true; //true면 render호출 false면 TOC render는 처음 한번만 호출
+    }
     render(){
       console.log('TOC render');
       var lists = [];
